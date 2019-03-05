@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nfit.jiudukeji.dao.JdAdminMapper">
+  <resultMap id="BaseResultMap" type="com.nfit.jiudukeji.entity.JdAdmin">
+    <id column="adm_id" jdbcType="INTEGER" property="adm_id" />
+    <result column="adm_name" jdbcType="VARCHAR" property="adm_name" />
+    <result column="adm_account" jdbcType="VARCHAR" property="adm_account" />
+    <result column="adm_pwd" jdbcType="VARCHAR" property="adm_pwd" />
+    <result column="adm_idcard" jdbcType="VARCHAR" property="adm_idcard" />
+    <result column="adm_birthday" jdbcType="TIMESTAMP" property="adm_birthday" />
+    <result column="adm_province" jdbcType="VARCHAR" property="adm_province" />
+    <result column="adm_sex" jdbcType="VARCHAR" property="adm_sex" />
+    <result column="adm_tel" jdbcType="VARCHAR" property="adm_tel" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from jd_admin
+    where adm_id = #{adm_id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.nfit.jiudukeji.entity.JdAdmin">
+    insert into jd_admin (adm_id, adm_name, adm_account, 
+      adm_pwd, adm_idcard, adm_birthday, 
+      adm_province, adm_sex, adm_tel
+      )
+    values (#{adm_id,jdbcType=INTEGER}, #{adm_name,jdbcType=VARCHAR}, #{adm_account,jdbcType=VARCHAR}, 
+      #{adm_pwd,jdbcType=VARCHAR}, #{adm_idcard,jdbcType=VARCHAR}, #{adm_birthday,jdbcType=TIMESTAMP}, 
+      #{adm_province,jdbcType=VARCHAR}, #{adm_sex,jdbcType=VARCHAR}, #{adm_tel,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.nfit.jiudukeji.entity.JdAdmin">
+    update jd_admin
+    set adm_name = #{adm_name,jdbcType=VARCHAR},
+      adm_account = #{adm_account,jdbcType=VARCHAR},
+      adm_pwd = #{adm_pwd,jdbcType=VARCHAR},
+      adm_idcard = #{adm_idcard,jdbcType=VARCHAR},
+      adm_birthday = #{adm_birthday,jdbcType=TIMESTAMP},
+      adm_province = #{adm_province,jdbcType=VARCHAR},
+      adm_sex = #{adm_sex,jdbcType=VARCHAR},
+      adm_tel = #{adm_tel,jdbcType=VARCHAR}
+    where adm_id = #{adm_id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select adm_id, adm_name, adm_account, adm_pwd, adm_idcard, adm_birthday, adm_province, 
+    adm_sex, adm_tel
+    from jd_admin
+    where adm_id = #{adm_id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select adm_id, adm_name, adm_account, adm_pwd, adm_idcard, adm_birthday, adm_province, 
+    adm_sex, adm_tel
+    from jd_admin
+  </select>
+</mapper>

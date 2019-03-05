@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nfit.jiudukeji.dao.JdBrandMapper">
+  <resultMap id="BaseResultMap" type="com.nfit.jiudukeji.entity.JdBrand">
+    <id column="brand_id" jdbcType="INTEGER" property="brand_id" />
+    <result column="brand_name" jdbcType="VARCHAR" property="brand_name" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from jd_brand
+    where brand_id = #{brand_id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.nfit.jiudukeji.entity.JdBrand">
+    insert into jd_brand (brand_id, brand_name)
+    values (#{brand_id,jdbcType=INTEGER}, #{brand_name,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.nfit.jiudukeji.entity.JdBrand">
+    update jd_brand
+    set brand_name = #{brand_name,jdbcType=VARCHAR}
+    where brand_id = #{brand_id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select brand_id, brand_name
+    from jd_brand
+    where brand_id = #{brand_id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select brand_id, brand_name
+    from jd_brand
+  </select>
+</mapper>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nfit.jiudukeji.dao.JdSkuMapper">
+  <resultMap id="BaseResultMap" type="com.nfit.jiudukeji.entity.JdSku">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="sku_name" jdbcType="VARCHAR" property="sku_name" />
+    <result column="price" jdbcType="DECIMAL" property="price" />
+    <result column="stock" jdbcType="INTEGER" property="stock" />
+    <result column="spu_id" jdbcType="INTEGER" property="spu_id" />
+    <result column="gmt_create" jdbcType="TIMESTAMP" property="gmt_create" />
+    <result column="gmt_update" jdbcType="TIMESTAMP" property="gmt_update" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from jd_sku
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.nfit.jiudukeji.entity.JdSku">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into jd_sku (id, sku_name, price, 
+      stock, spu_id, gmt_create, 
+      gmt_update)
+    values (#{id,jdbcType=INTEGER}, #{sku_name,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, 
+      #{stock,jdbcType=INTEGER}, #{spu_id,jdbcType=INTEGER}, #{gmt_create,jdbcType=TIMESTAMP}, 
+      #{gmt_update,jdbcType=TIMESTAMP})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.nfit.jiudukeji.entity.JdSku">
+    update jd_sku
+    set sku_name = #{sku_name,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DECIMAL},
+      stock = #{stock,jdbcType=INTEGER},
+      spu_id = #{spu_id,jdbcType=INTEGER},
+      gmt_create = #{gmt_create,jdbcType=TIMESTAMP},
+      gmt_update = #{gmt_update,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, sku_name, price, stock, spu_id, gmt_create, gmt_update
+    from jd_sku
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, sku_name, price, stock, spu_id, gmt_create, gmt_update
+    from jd_sku
+  </select>
+
+  <select id="selectBySpecValue" parameterType="com.nfit.jiudukeji.entity.SkuParameter"  resultMap="BaseResultMap">
+    select id, sku_name, price, stock, spu_id, gmt_create, gmt_update
+    from jd_sku where spu_id = #{proId} and id in (
+    select sku_id from jd_sku_spec_value
+    where sku_id in(select sku_id from jd_sku_spec_value
+    where spec_value_id in (#{specValueOne},#{specValueTow}) group by sku_id having count(*) = 2)
+    group by sku_id having count(*) = 2)
+  </select>
+
+
+</mapper>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nfit.jiudukeji.dao.JdProductMapper">
+  <resultMap id="BaseResultMap" type="com.nfit.jiudukeji.entity.JdProduct">
+    <id column="prod_no" jdbcType="INTEGER" property="prod_no" />
+    <result column="prod_name" jdbcType="VARCHAR" property="prod_name" />
+    <result column="prod_TypeId" jdbcType="INTEGER" property="prod_TypeId" />
+    <result column="prod_brandId" jdbcType="INTEGER" property="prod_brandId" />
+    <result column="low_price" jdbcType="DECIMAL" property="low_price" />
+    <result column="state" jdbcType="INTEGER" property="state" />
+    <result column="picture" jdbcType="VARCHAR" property="picture" />
+    <result column="sales" jdbcType="INTEGER" property="sales" />
+    <result column="gmt_create" jdbcType="TIMESTAMP" property="gmt_create" />
+    <result column="gmt_update" jdbcType="TIMESTAMP" property="gmt_update" />
+    <association column="prod_TypeId" property="jdProtype"
+                 select="com.nfit.jiudukeji.dao.JdProtypeMapper.selectByPrimaryKey"/>
+  </resultMap>
+
+  <!--得到Product总条数-->
+  <select id="getProductCount" resultType="java.lang.Integer">
+    select count(*) from jd_product
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from jd_product
+    where prod_no = #{prod_no,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.nfit.jiudukeji.entity.JdProduct">
+    insert into jd_product (prod_no, prod_name, prod_TypeId, 
+      prod_brandId, low_price, state, 
+      picture, gmt_create, gmt_update
+      )
+    values (#{prod_no,jdbcType=INTEGER}, #{prod_name,jdbcType=VARCHAR}, #{prod_TypeId,jdbcType=INTEGER}, 
+      #{prod_brandId,jdbcType=INTEGER}, #{low_price,jdbcType=DECIMAL}, #{state,jdbcType=INTEGER}, 
+      #{picture,jdbcType=VARCHAR}, #{gmt_create,jdbcType=TIMESTAMP}, #{gmt_update,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.nfit.jiudukeji.entity.JdProduct">
+    update jd_product
+    set prod_name = #{prod_name,jdbcType=VARCHAR},
+      prod_TypeId = #{prod_TypeId,jdbcType=INTEGER},
+      prod_brandId = #{prod_brandId,jdbcType=INTEGER},
+      low_price = #{low_price,jdbcType=DECIMAL},
+      state = #{state,jdbcType=INTEGER},
+      picture = #{picture,jdbcType=VARCHAR},
+      gmt_create = #{gmt_create,jdbcType=TIMESTAMP},
+      gmt_update = #{gmt_update,jdbcType=TIMESTAMP}
+    where prod_no = #{prod_no,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select prod_no, prod_name, prod_TypeId, prod_brandId, low_price, state, picture, 
+    gmt_create, gmt_update, sales
+    from jd_product
+    where prod_no = #{prod_no,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select prod_no, prod_name, prod_TypeId, prod_brandId, low_price, state, picture, 
+    gmt_create, gmt_update, sales
+    from jd_product
+  </select>
+
+  <select id="selectByBrandId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select prod_no, prod_name, prod_TypeId, prod_brandId, low_price, state, picture,
+    gmt_create, gmt_update, sales
+    from jd_product where prod_brandId = #{brandId}
+  </select>
+  <select id="selectByProdName" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select prod_no, prod_name, prod_TypeId, prod_brandId, low_price, state, picture,
+    gmt_create, gmt_update, sales
+    from jd_product where prod_name LIKE concat('%',#{prodName},'%')
+  </select>
+
+  <select id="selectBySales" resultMap="BaseResultMap">
+    select prod_no, prod_name, prod_TypeId, prod_brandId, low_price, state, picture,
+    gmt_create, gmt_update, sales
+    from jd_product order by sales DESC limit 5
+   </select>
+</mapper>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nfit.jiudukeji.dao.JdShowPicMapper">
+  <resultMap id="BaseResultMap" type="com.nfit.jiudukeji.entity.JdShowPic">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="pic_name" jdbcType="VARCHAR" property="pic_name" />
+    <result column="prod_id" jdbcType="INTEGER" property="prod_id" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from jd_show_pic
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.nfit.jiudukeji.entity.JdShowPic">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into jd_show_pic (id, pic_name, prod_id
+      )
+    values (#{id,jdbcType=INTEGER}, #{pic_name,jdbcType=VARCHAR}, #{prod_id,jdbcType=INTEGER}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.nfit.jiudukeji.entity.JdShowPic">
+    update jd_show_pic
+    set pic_name = #{pic_name,jdbcType=VARCHAR},
+      prod_id = #{prod_id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, pic_name, prod_id
+    from jd_show_pic
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, pic_name, prod_id
+    from jd_show_pic
+  </select>
+
+  <select id="selectAllById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, pic_name, prod_id
+    from jd_show_pic where prod_id = #{id}
+  </select>
+</mapper>

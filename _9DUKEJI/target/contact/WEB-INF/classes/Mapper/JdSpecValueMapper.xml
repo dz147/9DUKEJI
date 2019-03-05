@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nfit.jiudukeji.dao.JdSpecValueMapper">
+  <resultMap id="BaseResultMap" type="com.nfit.jiudukeji.entity.JdSpecValue">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="spec_id" jdbcType="INTEGER" property="spec_id" />
+    <result column="spec_value" jdbcType="VARCHAR" property="spec_value" />
+    <result column="gmt_create" jdbcType="TIMESTAMP" property="gmt_create" />
+    <result column="gmt_update" jdbcType="TIMESTAMP" property="gmt_update" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from jd_spec_value
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.nfit.jiudukeji.entity.JdSpecValue">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into jd_spec_value (id, spec_id, spec_value, 
+      gmt_create, gmt_update)
+    values (#{id,jdbcType=INTEGER}, #{spec_id,jdbcType=INTEGER}, #{spec_value,jdbcType=VARCHAR}, 
+      #{gmt_create,jdbcType=TIMESTAMP}, #{gmt_update,jdbcType=TIMESTAMP})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.nfit.jiudukeji.entity.JdSpecValue">
+    update jd_spec_value
+    set spec_id = #{spec_id,jdbcType=INTEGER},
+      spec_value = #{spec_value,jdbcType=VARCHAR},
+      gmt_create = #{gmt_create,jdbcType=TIMESTAMP},
+      gmt_update = #{gmt_update,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, spec_id, spec_value, gmt_create, gmt_update
+    from jd_spec_value
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, spec_id, spec_value, gmt_create, gmt_update
+    from jd_spec_value
+  </select>
+
+  <select id="selectBySpecId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, spec_id, spec_value, gmt_create, gmt_update
+    from jd_spec_value where spec_id = #{specId,jdbcType=INTEGER}
+  </select>
+</mapper>

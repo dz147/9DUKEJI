@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nfit.jiudukeji.dao.JdCartMapper">
+  <resultMap id="BaseResultMap" type="com.nfit.jiudukeji.entity.JdCart">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="number" jdbcType="INTEGER" property="number" />
+    <result column="prices" jdbcType="DECIMAL" property="prices" />
+    <result column="ststus" jdbcType="INTEGER" property="ststus" />
+    <result column="user_id" jdbcType="INTEGER" property="user_id" />
+    <result column="sku_id" jdbcType="INTEGER" property="sku_id" />
+    <result column="order_id" jdbcType="INTEGER" property="order_id" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from jd_cart
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.nfit.jiudukeji.entity.JdCart">
+    insert into jd_cart (id, number, prices, 
+      ststus, user_id, sku_id, 
+      order_id)
+    values (#{id,jdbcType=INTEGER}, #{number,jdbcType=INTEGER}, #{prices,jdbcType=DECIMAL}, 
+      #{ststus,jdbcType=INTEGER}, #{user_id,jdbcType=INTEGER}, #{sku_id,jdbcType=INTEGER}, 
+      #{order_id,jdbcType=INTEGER})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.nfit.jiudukeji.entity.JdCart">
+    update jd_cart
+    set number = #{number,jdbcType=INTEGER},
+      prices = #{prices,jdbcType=DECIMAL},
+      ststus = #{ststus,jdbcType=INTEGER},
+      user_id = #{user_id,jdbcType=INTEGER},
+      sku_id = #{sku_id,jdbcType=INTEGER},
+      order_id = #{order_id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, number, prices, ststus, user_id, sku_id, order_id
+    from jd_cart
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, number, prices, ststus, user_id, sku_id, order_id
+    from jd_cart
+  </select>
+  <select id="getCartCount" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    select count(*) from jd_cart where user_id = #{userId}
+  </select>
+</mapper>

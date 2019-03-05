@@ -1,0 +1,237 @@
+drop database if exists 9DUKEJIDB;
+create database 9DUKEJIDB;
+use 9DUKEJIDB;
+DROP TABLE IF EXISTS `jd_user`;-- 客户表
+CREATE TABLE `jd_user` (
+  `user_id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_name` varchar(30) not NULL,
+  `user_pwd` varchar(30) NOT NULL,
+  `user_phone` varchar(20) NOT NULL,
+  PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+insert into jd_user values(0,'小威同学','123321','15768812188'),
+  (0,'小武同学','123321','18868812188'),(0,'小针同学','123321','14768812188');
+
+DROP TABLE IF EXISTS `jd_admin`;-- 管理员
+CREATE TABLE `jd_admin` (
+  `adm_id` int(11) NOT NULL AUTO_INCREMENT,-- 主键
+  `adm_name` varchar(30) not NULL,			 -- 管理员姓名
+  `adm_account` varchar(11) not null,		-- 账号
+  `adm_pwd` varchar(30) NOT NULL,				 -- 密码
+  `adm_idcard` varchar(20) NOT NULL,			-- 身份证
+  `adm_birthday` dateTime, 							-- 出生日期
+  `adm_province` varchar(30),					-- 所在地区
+  `adm_sex` varchar(10),							-- 性别
+  `adm_tel` varchar(20) not null,				-- 电话
+  PRIMARY KEY (`adm_id`),
+  UNIQUE KEY `adm_idcard` (`adm_idcard`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+insert into jd_admin values(0,'张东明','admin','123456','441621199807212054','1998-07-21','广东省河源市紫金县','男','15768812162');
+
+DROP TABLE IF EXISTS `jd_protype`;-- 产品类型表
+CREATE TABLE `jd_protype` (
+  `prot_id` int(11) NOT NULL AUTO_INCREMENT,-- 产品类型ID
+  `prot_name` varchar(30) NOT NULL,			-- 产品类型名称
+  PRIMARY KEY (`prot_id`)						-- 主键
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+insert into jd_protype values(0,'手机'),(0,'平板电脑'),(0,'笔记本'),
+  (0,'台式机'),(0,'智能手表'),(0,'手机配件');
+-- 得到最新插入的数据ID
+select last_insert_id();
+show tables;
+
+DROP TABLE IF EXISTS `jd_brand`;-- 品牌表
+CREATE TABLE `jd_brand` (
+  `brand_id` int(11) NOT NULL AUTO_INCREMENT,-- 品牌ID
+  `brand_name` varchar(30) NOT NULL,			-- 品牌名称
+  PRIMARY KEY (`brand_id`)						-- 主键
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+insert into jd_brand values(0,'vivo'),(0,'一加'),(0,'诺基亚'),
+  (0,'努比亚'),(0,'锤子'),(0,'美图'),
+(0,'苹果'),(0,'三星'),(0,'华为'),
+  (0,'小米'),(0,'魅族'),(0,'OPPO');
+
+DROP TABLE IF EXISTS `jd_product`;-- 产品信息表
+CREATE TABLE `jd_product` (
+  `prod_no` int(11) NOT NULL AUTO_INCREMENT,-- 产品ID
+  `prod_name` varchar(150) NOT NULL,			-- 产品名称
+  `prod_TypeId` int(11) DEFAULT NULL,			-- 类型ID
+  `prod_brandId` int(11) not null,				-- 品牌ID
+  `low_price` decimal(9,2) DEFAULT NULL,	-- 产品最低售价
+  `state` int(11) DEFAULT '0',			-- 状态（上架0，下架1）
+  `picture` varchar(20) DEFAULT NULL,	-- 产品封面图
+  `gmt_create` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
+  `gmt_update` timestamp NOT NULL default '0000-00-00 00:00:00',
+  PRIMARY KEY (`prod_no`),						-- 主键
+  foreign key (`prod_TypeId`) REFERENCES jd_protype(`prot_id`), -- 类型外键
+  foreign key (`prod_brandId`) REFERENCES jd_brand(`brand_id`) -- 外键
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+SELECT * FROM jd_product;
+
+alter table jd_product  add sales int;
+
+UPDATE jd_product set picture = 'iPhone8Plus(1)' where prod_no = 3;
+alter table jd_product modify column `picture` varchar(100);
+insert into jd_product(prod_name,prod_TypeId,prod_brandId,low_price,state,picture)
+values
+  ('荣耀10 GT游戏加速 AIS手持夜景 全网通 移动联通电信4G 双卡双待 游戏手机',1,3,2299.00,0,'http://pjv3h15g0.bkt.clouddn.com/ry(1).jpg'),
+  ('小米Mix3 骁龙845 全网通4G 双卡双待 全面屏拍照游戏智能手机',1,4,3299.00,0,'http://pjv3h15g0.bkt.clouddn.com/xm(1).jpg');
+
+select count(*) from jd_product;
+-- 展示图产品
+DROP TABLE IF EXISTS `jd_show_pic`;
+CREATE TABLE `jd_show_pic` (
+  `id` int(20)  NOT NULL auto_increment,
+  `pic_name` varchar(50) NOT NULL COMMENT '展示图地址',
+  `prod_id` int(20) not null,
+  PRIMARY KEY  (`id`),
+  FOREIGN KEY (`prod_id`) REFERENCES `jd_product`(`prod_no`)
+);
+INSERT INTO jd_show_pic VALUES
+  (0,'http://pjv3h15g0.bkt.clouddn.com/iPhoneX(1).jpg',4),
+  (0,'http://pjv3h15g0.bkt.clouddn.com/iPhoneX(2).jpg',4),
+  (0,'http://pjv3h15g0.bkt.clouddn.com/iPhoneX(3).jpg',4),
+  (0,'http://pjv3h15g0.bkt.clouddn.com/iPhoneX(4).jpg',4);
+select * from jd_show_pic;
+DROP TABLE IF EXISTS `jd_spec`;-- 规格表
+CREATE TABLE `jd_spec` (
+  `id` int(20)  NOT NULL auto_increment,
+  `spec_no` varchar(50) NOT NULL COMMENT '规格编号',
+  `spec_name` varchar(50) NOT NULL COMMENT '规格名称',
+  `gmt_create` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
+  `gmt_update` timestamp NOT NULL default '0000-00-00 00:00:00',
+  PRIMARY KEY  (`id`)
+);
+
+insert into jd_spec(`spec_no`,`spec_name`) values('0001','颜色'),('0002','内存');
+
+DROP TABLE IF EXISTS `jd_spec_value`;-- 规格值
+CREATE TABLE `jd_spec_value` (
+  `id` int(20)  NOT NULL auto_increment,
+  `spec_id` int(20) NOT NULL   COMMENT '规格id',
+  `spec_value` varchar(50) NOT NULL COMMENT '规格值',
+  `gmt_create` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
+  `gmt_update` timestamp NOT NULL default '0000-00-00 00:00:00',
+  PRIMARY KEY  (`id`),
+  FOREIGN KEY (`spec_id`) REFERENCES `jd_spec`(`id`)
+);
+insert into jd_spec_value(`spec_id`,`spec_value`) values(1,'亮黑色'),(1,'磨砂黑'),(2,'32G'),(2,'128G');
+
+-- SUP-规格
+DROP TABLE IF EXISTS `jd_spu_spec`;
+CREATE TABLE `jd_spu_spec` (
+  `id` int(20) primary key NOT NULL auto_increment,
+  `spu_id` int(20) NOT NULL COMMENT 'spu_id',		-- 产品ID
+  `spec_id` int(20) NOT NULL COMMENT 'spec_id',		-- 规格ID
+  `gmt_create` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
+  `gmt_update` timestamp NOT NULL default '0000-00-00 00:00:00',
+  FOREIGN KEY (`spu_id`) REFERENCES `jd_product` (`prod_no`),
+  FOREIGN KEY (`spec_id`) REFERENCES `jd_spec` (`id`)
+);
+insert into jd_spu_spec(`spu_id`,`spec_id`) values(1,1),(1,2);
+
+-- SKU(库存单位)表
+DROP TABLE IF EXISTS `jd_sku`;
+CREATE TABLE `jd_sku` (
+  `id` int(20)  NOT NULL auto_increment,
+  `sku_name` varchar(50) NOT NULL COMMENT 'sku名称(冗余spu_name)',
+  `price` decimal(9,2) NOT NULL COMMENT '售价',
+  `stock` int(11) NOT NULL COMMENT '库存',
+  `spu_id` int(20) NOT NULL COMMENT '产品ID',
+  `gmt_create` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
+  `gmt_update` timestamp NOT NULL default '0000-00-00 00:00:00',
+  PRIMARY KEY  (`id`),
+  FOREIGN KEY (`spu_id`) REFERENCES `jd_product` (`prod_no`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='sku表';
+insert into jd_sku(`sku_name`,`price`,`stock`,`spu_id`) values('iPhone7 Plus 32G 亮黑色',3100,13,1),
+  ('iPhone7 Plus 128G 亮黑色',3550,5,1);
+
+-- SKU-规格值
+DROP TABLE IF EXISTS `jd_sku_spec_value`;
+CREATE TABLE `jd_sku_spec_value` (
+  `id` int(20)  NOT NULL auto_increment,
+  `sku_id` int(20) NOT NULL COMMENT 'sku_id',
+  `spec_value_id` int(20) NOT NULL COMMENT '规格值id',
+  `gmt_create` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
+  `gmt_update` timestamp NOT NULL default '0000-00-00 00:00:00',
+  PRIMARY KEY  (`id`),
+  FOREIGN KEY (`sku_id`) REFERENCES `jd_sku` (`id`),
+  FOREIGN KEY (`spec_value_id`) REFERENCES `jd_spec_value` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='sku规格值';
+insert into jd_sku_spec_value(`sku_id`,`spec_value_id`) values(1,1),(1,3),(2,1),(2,4);
+
+select t.sku_id from (select * from jd_sku_spec_value where spec_value_id = 1 or spec_value_id = 3 ) t where spec_value_id not in (1);
+select * from jd_sku where spu_id = 1 and id in (1,2);
+
+select * from jd_spu;
+
+
+
+
+
+
+
+DROP TABLE IF EXISTS `jd_cart`;-- 购物车表
+CREATE TABLE `jd_cart` (
+  `id` int(11) primary key AUTO_INCREMENT,-- 购物车ID
+  `number` int(11) DEFAULT NULL, -- 数量
+  `prices` decimal(9,2) DEFAULT NULL, -- 总价
+  `ststus` int(11) DEFAULT '0', -- 状态（待付款 已付款）
+  `user_id` int(11) DEFAULT NULL, -- 用户ID
+  `sku_id` int (11) not null, -- SKUid
+  `order_id` int(11) ,
+  FOREIGN KEY (`user_id`) REFERENCES `jd_user` (`user_id`),
+  FOREIGN KEY (`sku_id`) REFERENCES `jd_sku` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+-- 添加外键约束
+
+alter table `jd_cart` add constraint FK_ID foreign key(`order_id`) REFERENCES jd_order(`id`);
+
+DROP TABLE IF EXISTS `jd_positions`; -- 收货地址
+CREATE TABLE `jd_positions` (
+  `id` int(11) primary key AUTO_INCREMENT, -- 收货地址ID
+  `user_id` int(11) not NULL, -- 用户id
+  `province` varchar(20) not null, -- 省
+  `city` varchar(20) not null, -- 市
+  `site` varchar(50) not null , -- 县、街道
+  `tel` varchar(16) not null ,-- 收货电话
+  foreign key (`user_id`) REFERENCES jd_user(`user_id`) -- 用户外键
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+
+DROP TABLE IF EXISTS `jd_order`; -- 订单
+CREATE TABLE `jd_order` (
+  `id` int(11) PRIMARY KEY AUTO_INCREMENT,-- 主键
+  `user_id` int(11) DEFAULT NULL,			-- 用户ID
+  `sum` int(11) check(`sum`>0),			-- 总数
+  `prices` decimal(9,2) DEFAULT NULL,	-- 总价
+  `posi_id` int(11) DEFAULT NULL, -- 收货地址
+  `order_number` varchar(30),			-- 订单号
+  `state` int(11) DEFAULT NULL,		-- 订单状态
+  `gmt_create` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
+  `gmt_update` timestamp NOT NULL default '0000-00-00 00:00:00',
+  foreign key (user_id) REFERENCES jd_user(`user_id`), -- 用户外键
+  foreign key (`posi_id`) REFERENCES jd_positions(`id`) -- 收货地址外键外键
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `user_comment`;-- 产品评论表
+CREATE TABLE `user_comment` (
+  `id` int(11) PRIMARY KEY AUTO_INCREMENT,-- 主键
+  `user_id` int(11) DEFAULT NULL,			-- 用户ID
+  `content` varchar(100),					-- 评论内容
+  `prod_id` int(11),						-- 产品ID
+  foreign key (user_id) REFERENCES jd_user(`user_id`), -- 用户外键
+  foreign key (`prod_id`) REFERENCES jd_product(`prod_no`) -- 产品外键
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+
+select prod_no, prod_name, prod_TypeId, prod_brandId, low_price, state, picture,
+  gmt_create, gmt_update
+from jd_product where prod_name LIKE '%Plus%';
+
+select * from jd_user;
+
